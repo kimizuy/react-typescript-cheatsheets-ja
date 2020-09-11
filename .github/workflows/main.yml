@@ -1,0 +1,37 @@
+name: FormatCodeAndShowDiff
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory
+        id: yarn
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v1.1.2
+        with:
+          path: ${{ steps.yarn.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles(format('{0}{1}', github.workspace, '/website/yarn.lock')) }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Format code
+        run: yarn format
+
+      - name: Format correct?
+        run: git diff --exit-code
+
+      - name: Danger for Spell Checking
+        run: |
+          TOKEN='7469b4e94ce21b43e3ab7a'
+          TOKEN+='79960c12a1e067f2ec'
+          DANGER_GITHUB_API_TOKEN=$TOKEN yarn danger ci
