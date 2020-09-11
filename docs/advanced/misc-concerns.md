@@ -83,7 +83,7 @@ export default Object.assign(Form, { Input: Input });
 
 ## Design System Development
 
-I do like [Docz](https://docz.site/) which takes basically [1 line of config](https://www.docz.site/documentation/project-configuration#typescript) to accept TypeScript. However it is newer and has a few more rough edges (many breaking changes since it is still < v1.0)
+I do like [Docz](https://docz.site/) which takes basically [1 line of config](https://www.docz.site/documentation/project-configuration#typescript) to accept TypeScript. However it is newer and has a few more rough edges（v1.0 未満のため多くの変更点があります）
 
 For developing with Storybook, read the docs I wrote over here: <https://storybook.js.org/configurations/typescript-config/>. This includes automatic proptype documentation generation, which is awesome :)
 
