@@ -10,18 +10,18 @@ title: セットアップ
 3. [React 公式ドキュメントの TypeScript セクション](https://reactjs.org/docs/static-type-checking.html#typescript) を読んでいること。
 4. [TypeScript playground の React セクション](http://www.typescriptlang.org/play/index.html?jsx=2&esModuleInterop=true&e=181#example/typescript-with-react) を読んでいること（任意：[TypeScript playglound](http://www.typescriptlang.org/play/index.html) の Examples セクションにある 40 以上の example に目を通しましょう）。
 
-このガイドでは、常に最新の TypeScript バージョンで動作することを前提としています。古いバージョンの注記は、折りたたみ可能な `<details>` タグ内に記述されています。
+このガイドでは、常に最新のバージョンの TypeScript で動作することを前提としています。古いバージョンの注記は、折りたたみ可能な `<details>` タグ内に記述されています。
 
 ## React + TypeScript を始める
 
 1. [Create React App v2.1+ with TypeScript](https://facebook.github.io/create-react-app/docs/adding-typescript): `npx create-react-app my-app --template typescript`
 
-- 以前は `create-react-app-typescript` を推奨していましたが、現在は[廃止](https://www.reddit.com/r/reactjs/comments/a5919a/createreactapptypescript_has_been_archived_rip/)されています。[移行の手引き](https://vincenttunru.com/migrate-create-react-app-typescript-to-create-react-app/)をご覧ください。
+- 以前は `create-react-app-typescript` を推奨していましたが、現在は[廃止](https://www.reddit.com/r/reactjs/comments/a5919a/createreactapptypescript_has_been_archived_rip/)されています。[移行の手引き](https://vincenttunru.com/migrate-create-react-app-typescript-to-create-react-app/)を参照してください。
 
 2. [Basarat's guide](https://github.com/basarat/typescript-react/tree/master/01%20bootstrap) は自分の手で環境構築するガイドです（React + TypeScript + Webpack + Babel）。
 
 - 特に `@types/react` と `@types/react-dom` がインストールされていることを確認してください（詳細は [DefinitelyTyped プロジェクト](https://definitelytyped.org/) へ）。
-- たくさんの React + TypeScript ボイラープレートもあります。[おすすめの React + TypeScript 資料集](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet#recommended-react--typescript-codebases-to-learn-from)をご覧ください。
+- たくさんの React + TypeScript ボイラープレートもあります。[おすすめの React + TypeScript 資料集](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet#recommended-react--typescript-codebases-to-learn-from)を参照してください。
 
 ## React をインポートする
 
