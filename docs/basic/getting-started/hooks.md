@@ -3,19 +3,19 @@ id: hooks
 title: Hooks
 ---
 
-Hooks are [supported in `@types/react` from v16.8 up](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/a05cc538a42243c632f054e42eab483ebf1560ab/types/react/index.d.ts#L800-L1031).
+Hooks は [`@types/react`](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/a05cc538a42243c632f054e42eab483ebf1560ab/types/react/index.d.ts#L800-L1031) でバージョン 16.8 以上からサポートされています。
 
 ## useState
 
-Type inference works very well most of the time:
+型推論はほとんどの場合で有効に機能します。
 
 ```tsx
-const [val, toggle] = React.useState(false); // `val` is inferred to be a boolean, `toggle` only takes booleans
+const [val, toggle] = React.useState(false); // val` は boolean であると推測され、`toggle` は boolean のみを受け取ります。
 ```
 
-See also the [Using Inferred Types](#using-inferred-types) section if you need to use a complex type that you've relied on inference for.
+推論に頼った複雑な型を使う必要がある場合は、[推論された型を使い方](https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/types/#using-inferred-types)のセクションも参照してください。
 
-However, many hooks are initialized with null-ish default values, and you may wonder how to provide types. Explicitly declare the type, and use a union type:
+しかし、多くのフックは null-ish なデフォルト値で初期化されており、どのように型を提供するか悩むかもしれません。明示的に型を宣言しユニオン型を使用します。
 
 ```tsx
 const [user, setUser] = React.useState<IUser | null>(null);
@@ -26,7 +26,7 @@ setUser(newUser);
 
 ## useReducer
 
-You can use [Discriminated Unions](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) for reducer actions. Don't forget to define the return type of reducer, otherwise TypeScript will infer it.
+Reducer の動作には [Discriminated Unions（判別共用体）](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html#discriminated-unions) を使うことができます。
 
 ```tsx
 const initialState = { count: 0 };
@@ -66,11 +66,11 @@ function Counter() {
 
 <details>
 
-<summary><b>Usage with `Reducer` from `redux`</b></summary>
+<summary><b>`redux` での `Reducer` の使い方</b></summary>
 
-In case you use the [redux](https://github.com/reduxjs/redux) library to write reducer function, It provides a convenient helper of the format `Reducer<State, Action>` which takes care of the return type for you.
+[redux](https://github.com/reduxjs/redux)ライブラリを使って Reducer 関数を書く場合、`Reducer<State, Action>`形式の便利なヘルパーを提供しています。
 
-So the above reducer example becomes:
+そのため、上記の Reducer の例は次のようになります：
 
 ```tsx
 import { Reducer } from 'redux';
@@ -82,16 +82,16 @@ export function reducer: Reducer<AppState, Action>() {}
 
 ## useEffect
 
-When using `useEffect`, take care not to return anything other than a function or `undefined`, otherwise both TypeScript and React will yell at you. This can be subtle when using arrow functions:
+`useEffect`を使うときは、関数や `undefined` 以外のものを返さないように注意してください。さもないと React と TypeScript の両方から怒られます。アロー関数を使う場合にはわかりにくいことがあります。
 
 ```ts
 function DelayedEffect(props: { timerMs: number }) {
   const { timerMs } = props;
-  // bad! setTimeout implicitly returns a number because the arrow function body isn't wrapped in curly braces
+  // 悪い例：アロー関数の本体が中括弧で包まれていないためエラーになります。
   useEffect(
     () =>
       setTimeout(() => {
-        /* do stuff */
+        /* 処理 */
       }, timerMs),
     [timerMs]
   );
@@ -101,25 +101,25 @@ function DelayedEffect(props: { timerMs: number }) {
 
 ## useRef
 
-When using `useRef`, you have two options when creating a ref container that does not have an initial value:
+`useRef`を使う場合、初期値を持たない Ref コンテナを作成する際には、2 つのオプションがあります。
 
 ```ts
 const ref1 = useRef<HTMLElement>(null!);
 const ref2 = useRef<HTMLElement | null>(null);
 ```
 
-The first option will make `ref1.current` read-only, and is intended to be passed in to built-in `ref` attributes that React will manage (because React handles setting the `current` value for you).
+最初のオプションは `ref1.current` を読み取り専用にし、React が管理する組み込みの `ref` 属性に渡すことを意図しています（React が `current` の値の設定を処理してくれるからです）。
 
 <details>
-  <summary>What is the <code>!</code> at the end of <code>null!</code>?</summary>
+  <summary><code>null!</code> の最後の <code>!</code> はなに？</summary>
 
-`null!` is a non-null assertion operator (the `!`). It asserts that any expression before it is not `null` or `undefined`, so if you have `useRef<HTMLElement>(null!)` it means that you're instantiating the ref with a current value of `null` but lying to TypeScript that it's not `null`.
+`null!` は non-null アサーション演算子 (`!`) です。この演算子は、その前の式が `null` や `undefined` ではないことを保証します。したがって、`useRef<HTMLElement>(null!)` の場合は、現在の値が `null` である ref のインスタンスを作成しているが、TypeScript には `null` ではないと嘘をついていることを意味します。
 
 ```ts
 function MyComponent() {
   const ref1 = useRef<HTMLElement>(null!);
   useEffect(() => {
-    doSomethingWith(ref1.current); // TypeScript won't require null-check e.g. ref1 && ref1.current
+    doSomethingWith(ref1.current); // ref1 と ref1.current で TypeScript は null チェックを必要としません。
   });
   return <div ref={ref1}> etc </div>;
 }
@@ -127,23 +127,22 @@ function MyComponent() {
 
 </details>
 
-The second option will make `ref2.current` mutable, and is intended for "instance variables" that you manage yourself.
+2 番目のオプションは `ref2.current` を可変にするもので、自分で管理する「インスタンス変数」のためのものです。
 
 ```tsx
 function TextInputWithFocusButton() {
-  // initialise with null, but tell TypeScript we are looking for an HTMLInputElement
+  // null で初期化しますが、HTMLInputElement を探していることを TypeScript に伝えます。
   const inputEl = React.useRef<HTMLInputElement>(null);
   const onButtonClick = () => {
-    // strict null checks need us to check if inputEl and current exist.
-    // but once current exists, it is of type HTMLInputElement, thus it
-    // has the method focus! ✅
+    // 厳密な null チェックでは inputEl と current が存在するかどうかをチェックする必要があります。
+    // current が存在すれば、それは HTMLInputElement 型なので focus() を持っています! ✅
     if (inputEl && inputEl.current) {
       inputEl.current.focus();
     }
   };
   return (
     <>
-      {/* in addition, inputEl only can be used with input elements. Yay! */}
+      {/* なお、inputElはinput要素でしか使えません。やったー! */}
       <input ref={inputEl} type="text" />
       <button onClick={onButtonClick}>Focus the input</button>
     </>
@@ -157,7 +156,7 @@ example from [Stefan Baumgartner](https://fettblog.eu/typescript-react/hooks/#us
 
 ## useImperativeHandle
 
-_we dont have much here, but this is from [a discussion in our issues](https://github.com/typescript-cheatsheets/react/issues/106)_
+_この節の解説は多くありません。コード例は [イシューでの議論](https://github.com/typescript-cheatsheets/react/issues/106) からのものです。_
 
 ```tsx
 type ListProps<ItemType> = {
@@ -175,7 +174,7 @@ function List<ItemType>(props: ListProps<ItemType>) {
 
 ## Custom Hooks
 
-If you are returning an array in your Custom Hook, you will want to avoid type inference as TypeScript will infer a union type (when you actually want different types in each position of the array). Instead, use [TS 3.4 const assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-4/#const-assertions):
+Custom Hooks で配列を返す場合、TypeScript は（実際には配列の各位置に異なる型が欲しい場合に）共用体型を推論します。こういった型推論を避けたいならば代わりに [TS 3.4 const アサーション](https://devblogs.microsoft.com/typescript/announcing-typescript-3-4/#const-assertions) を使用してください：
 
 ```tsx
 export function useLoading() {
@@ -184,18 +183,18 @@ export function useLoading() {
     setState(true);
     return aPromise.finally(() => setState(false));
   };
-  return [isLoading, load] as const; // infers [boolean, typeof load] instead of (boolean | typeof load)[]
+  return [isLoading, load] as const; // (boolean | typeof load)[] の代わりに [boolean, typeof load] を推論します。
 }
 ```
 
 [View in the TypeScript Playground](https://www.typescriptlang.org/play/?target=5&jsx=2#code/JYWwDg9gTgLgBAJQKYEMDG8BmUIjgcilQ3wFgAoCpAD0ljkwFcA7DYCZuRgZyQBkIKACbBmAcwAUASjgBvCnDhoO3eAG1g3AcNFiANHF4wAyjBQwkAXTgBeRMRgA6HklPmkEzCgA2vKQG4FJRV4b0EhWzgJFAAFHBBNJAAuODjcRIAeFGYATwA+GRs8uSDFIzcLCRgoRiQA0rgiGEYoTlj4xMdMUR9vHIlpW2Lys0qvXzr68kUAX0DpxqRm1rgNLXDdAzDhaxRuYOZVfzgAehO4UUwkKH21ACMICG9UZgMYHLAkCEw4baFrUSqVARb5RB5PF5wAA+cHen1BfykaksFBmQA)
 
-This way, when you destructure you actually get the right types based on destructure position.
+よって、デストラクチャ時にはデストラクチャの位置に基づいた正しい型を実際に取得できます。
 
 <details>
-<summary><b>Alternative: Asserting a tuple return type</b></summary>
+<summary><b>代替案：タプルの戻り値の型を宣言する</b></summary>
 
-If you are [having trouble with const assertions](https://github.com/babel/babel/issues/9800), you can also assert or define the function return types:
+[const アサーションで困っている](https://github.com/babel/babel/issues/9800)なら、関数の戻り値の型を宣言したり、定義したりすることもできます。
 
 ```tsx
 export function useLoading() {
@@ -211,7 +210,7 @@ export function useLoading() {
 }
 ```
 
-A helper function that automatically types tuples can also be helpful if you write a lot of custom hooks:
+Custom Hooks を多く書く場合は、タプルを自動的に型付けしてくれるヘルパー関数も便利です。
 
 ```ts
 function tuplify<T extends any[]>(...elements: T) {
@@ -233,19 +232,20 @@ function useTuple() {
 
 </details>
 
-Note that the React team recommends that custom hooks that return more than two values should use proper objects instead of tuples, however.
+しかし、React チームは、2 つ以上の値を返す Custom Hooks はタプルではなく適切なオブジェクトを使用することを推奨していることに注意してください。
 
-More Hooks + TypeScript reading:
+もっと Hooks + TypeScript を読む：
 
 - https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
 - https://fettblog.eu/typescript-react/hooks/#useref
 
 If you are writing a React Hooks library, don't forget that you should also expose your types for users to use.
 
+React Hooks ライブラリを書く場合は、ユーザが使えるように型を公開することも忘れてはいけません。
 Example React Hooks + TypeScript Libraries:
 
 - https://github.com/mweststrate/use-st8
 - https://github.com/palmerhq/the-platform
 - https://github.com/sw-yx/hooks
 
-[Something to add? File an issue](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet/issues/new).
+[何か追加したいことがあればイシューをください](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet/issues/new)。
