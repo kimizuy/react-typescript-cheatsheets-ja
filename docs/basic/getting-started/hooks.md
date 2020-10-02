@@ -13,9 +13,9 @@ Hooks は [`@types/react`](https://github.com/DefinitelyTyped/DefinitelyTyped/bl
 const [val, toggle] = React.useState(false); // val` は boolean であると推測され、`toggle` は boolean のみを受け取ります。
 ```
 
-推論に頼った複雑な型を使う必要がある場合は、[推論された型を使い方](https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/types/#using-inferred-types)のセクションも参照してください。
+推論に頼った複雑な型を使う必要がある場合は、[型推論](https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/types/#using-inferred-types)のセクションも参照してください。
 
-しかし、多くのフックは null-ish なデフォルト値で初期化されており、どのように型を提供するか悩むかもしれません。明示的に型を宣言しユニオン型を使用します。
+しかし、多くのフックは null-ish なデフォルト値で初期化されており、どのように型定義するか悩むかもしれません。次の例では明示的に型定義しユニオン型を使用しています。
 
 ```tsx
 const [user, setUser] = React.useState<IUser | null>(null);
@@ -192,9 +192,9 @@ export function useLoading() {
 よって、デストラクチャ時にはデストラクチャの位置に基づいた正しい型を実際に取得できます。
 
 <details>
-<summary><b>代替案：タプルの戻り値の型を宣言する</b></summary>
+<summary><b>代替案：タプルの戻り値の型を定義する</b></summary>
 
-[const アサーションで困っている](https://github.com/babel/babel/issues/9800)なら、関数の戻り値の型を宣言したり、定義したりすることもできます。
+[const アサーションで困っている](https://github.com/babel/babel/issues/9800)なら、関数の戻り値の型を定義することもできます。
 
 ```tsx
 export function useLoading() {
