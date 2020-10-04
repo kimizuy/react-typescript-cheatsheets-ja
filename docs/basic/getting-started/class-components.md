@@ -1,13 +1,13 @@
 ---
 id: class_components
-title: Class Components
+title: クラスコンポーネント
 ---
 
-Within TypeScript, `React.Component` is a generic type (aka `React.Component<PropType, StateType>`), so you want to provide it with (optional) prop and state type parameters:
+TypeScript の中では、`React.Component` はジェネリック型（`React.Component<PropType, StateType>`）なので、（任意で）プロップ型とステート型のパラメータを指定できます：
 
 ```tsx
 type MyProps = {
-  // using `interface` is also ok
+  // interface も使用できます
   message: string;
 };
 type MyState = {
@@ -15,7 +15,7 @@ type MyState = {
 };
 class App extends React.Component<MyProps, MyState> {
   state: MyState = {
-    // optional second annotation for better type inference
+    // 戻り値の型を任意で指定することで型推論の精度を上げることができます
     count: 0,
   };
   render() {
@@ -30,23 +30,23 @@ class App extends React.Component<MyProps, MyState> {
 
 [View in the TypeScript Playground](https://www.typescriptlang.org/play/?jsx=2#code/JYWwDg9gTgLgBAJQKYEMDG8BmUIjgcilQ3wFgAoCmATzCTgFlqAFHMAZzgF44BvCuHAD0QuAFd2wAHYBzOAANpMJFEzok8uME4oANuwhwIAawFwQSduxQykALjjsYUaTIDcFAL4fyNOo2oAZRgUZW4+MzQIMSkYBykxEAAjFTdhUV1gY3oYAAttLx80XRQrOABBMDA4JAAPZSkAE05kdBgAOgBhXEgpJFiAHiZWCA4AGgDg0KQAPgjyQSdphyYpsJ5+BcF0ozAYYAgpPUckKKa4FCkpCBD9w7hMaDgUmGUoOD96aUwVfrQkMyCKIxOJwAAMZm8ZiITRUAAoAJTzbZwIgwMRQKRwOGA7YDRrAABuM1xKN4eW07TAbHY7QsVhsSE8fAptKWynawNinlJcAGQgJxNxCJ8gh55E8QA)
 
-Don't forget that you can export/import/extend these types/interfaces for reuse.
+エクスポートやインポート、拡張によって types/interfaces が再利用できることも覚えておきましょう。
 
 <details>
-<summary><b>Why annotate <code>state</code> twice?</b></summary>
+<summary><b>なぜ<code>state</code>を二度定義するのか</b></summary>
 
-It isn't strictly necessary to annotate the `state` class property, but it allows better type inference when accessing `this.state` and also initializing the state.
+クラスプロパティ `state` にアノテーションをつけることは厳密には必要ではありませんが、`this.state` にアクセスしたり状態を初期化したりする際に、より良い型推論ができるようになります。
 
-This is because they work in two different ways, the 2nd generic type parameter will allow `this.setState()` to work correctly, because that method comes from the base class, but initializing `state` inside the component overrides the base implementation so you have to make sure that you tell the compiler that you're not actually doing anything different.
+これは 2 つの異なる方法で動作するからです。2 番目のジェネリック型パラメータで `this.setState()` が正しく動作するようになります。
 
-[See commentary by @ferdaber here](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet/issues/57).
+詳しくは [@ferdaber のコメント](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet/issues/57)を参照してください。
 
 </details>
 
 <details>
-  <summary><b>No need for <code>readonly</code></b></summary>
+  <summary><b><code>readonly</code>はもう必要ない</b></summary>
 
-You often see sample code include `readonly` to mark props and state immutable:
+よくサンプルコードに `readonly` が含まれているのを見かけますが、これはプロップやステートがイミュータブル（不変）であることを示すものです：
 
 ```tsx
 type MyProps = {
@@ -57,11 +57,11 @@ type MyState = {
 };
 ```
 
-This is not necessary as `React.Component<P,S>` already marks them as immutable. ([See PR and discussion!](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26813))
+`React.Component<P,S>`は既に不変としてマークされているので、`readOnly`は必要ありません。（[PR と議論](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/26813)）を参照してください。
 
 </details>
 
-**Class Methods**: Do it like normal, but just remember any arguments for your functions also need to be typed:
+**クラスメソッド**：通常通り実行されますが、関数の引数はすべて型付けされている必要があることを覚えておいてください。
 
 ```tsx
 class App extends React.Component<{ message: string }, { count: number }> {
@@ -84,7 +84,7 @@ class App extends React.Component<{ message: string }, { count: number }> {
 
 [View in the TypeScript Playground](https://www.typescriptlang.org/play/?jsx=2#code/JYWwDg9gTgLgBAJQKYEMDG8BmUIjgcilQ3wFgAoCtAGxQGc64BBMMOJADxiQDsATRsnQwAdAGFckHrxgAeAN5wQSBigDmSAFxw6MKMB5q4AXwA0cRWggBXHjG09rIAEZIoJgHwWKcHTBTccAC8FnBWtvZwAAwmANw+cET8bgAUAJTe5L6+RDDWUDxwKQnZcLJ8wABucBA8YtTAaADWQfLpwV4wABbAdCIGaETKdikAjGnGHiWlFt29ImA4YH3KqhrGsz19ugFIIuF2xtO+sgD0FZVTWdlp8ddH1wNDMsFFKCCRji5uGUFe8tNTqc4A0mkg4HM6NNISI6EgYABlfzcFI7QJ-IoA66lA6RNF7XFwADUcHeMGmxjStwSxjuxiAA)
 
-**Class Properties**: If you need to declare class properties for later use, just declare it like `state`, but without assignment:
+**クラスプロパティ**：後で使用するためにクラスのプロパティを宣言する必要がある場合は、`state`のように代入しないで宣言してください。
 
 ```tsx
 class App extends React.Component<{
@@ -106,4 +106,4 @@ class App extends React.Component<{
 
 [View in the TypeScript Playground](https://www.typescriptlang.org/play/?jsx=2#code/JYWwDg9gTgLgBAJQKYEMDG8BmUIjgcilQ3wFgAoCtAGxQGc64BBMMOJADxiQDsATRsnQwAdAGFckHrxgAeAN4U4cEEgYoA5kgBccOjCjAeGgNwUAvgD44i8sshHuUXTwCuIAEZIoJuAHo-OGpgAGskOBgAC2A6JTg0SQhpHhgAEWA+AFkIVxSACgBKGzjlKJiRBxTvOABeOABmMzs4cziifm9C4ublIhhXKB44PJLlOFk+YAA3S1GxmzK6CpwwJdV1LXM4FH4F6KXKp1aesdk-SZnRgqblY-MgA)
 
-[Something to add? File an issue](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet/issues/new).
+何か追加したいなら[イシュー](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet/issues/new)をください。
